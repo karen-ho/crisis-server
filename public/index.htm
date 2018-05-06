@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <!-- <link rel="stylesheet" type="text/css" href="../css/tests.css"> -->
+        <script src="/js/jquery-1.10.1.min.js"></script>
+        <script src="/js/d3.v3.js" charset="utf-8"></script>
+        <script src="/js/epoch.js"></script>
+        <link rel="stylesheet" type="text/css" href="/css/epoch.css">
+        <style type="text/css">
+        	
+			body {
+			    font-family: helvetica;
+			}
+
+			/* Default test chart height of 220px. */
+			.test .epoch {
+			    height: 220px;
+			}
+
+            .test {
+                margin: 0 auto;
+                width: 50%;
+            }
+
+			.broken {
+			    color: red;
+			}
+
+            .number {
+                color: #424242;
+                text-align: center;
+                font-size: 100px;
+                margin: 20px 0 0;
+            }
+
+            .bpm {
+                color: #424242;
+                font-size: 30px;
+                margin: 0 0 30px;
+                text-align: center;
+            }
+
+        </style>
+
+        <script>
+            var nextTime = (function() {
+                var currentTime = parseInt(new Date().getTime() / 1000);
+                return function() { return currentTime++; }
+            })();
+        </script>
+
+        <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.0.12/css/all.css" integrity="sha384-G0fIWCsCzJIMAVNQPfjH08cyYaUtMwjJwqiRKxxE/rx96Uroj1BtIQ6MLJuheaO9" crossorigin="anonymous" />
+        <style type="text/css">
+          .beat {
+            text-align: center;
+            position: relative;
+            height: 200px;
+            width: 200px;
+            left: 90px;
+            margin-top: 80px;
+          }
+
+            @media only screen and (max-device-width: 475px) {
+                .beat {
+                    left: -20px;
+                }
+
+                .bpm {
+                    margin-bottom: 50px;
+                }
+            }
+
+          #heart-beat {
+            margin-top: 10px;
+            position: absolute;
+            color: #FD7E14;
+          }
+
+          .small {
+            font-size: 64px;
+            margin-left: 32px;
+            margin-top: 32px;
+            opacity: 0.7;
+            animation: grow 2s infinite ease;
+          }
+
+          .medium {
+            font-size: 96px;
+            margin-left: 16px;
+            margin-top: 16px;
+            opacity: 0.2;
+            animation-delay: 0.5s;
+            animation: grow 2s infinite ease;
+          }
+
+          .large {
+            font-size: 128px;
+            opacity: 0.1;
+            animation-delay: 0.2s;
+            animation: grow 2s infinite ease;
+          }
+
+          .hearts i {
+            position: absolute;
+            top: 50%;
+            display: inline-block;
+          }
+
+          .hearts {
+            color: #FD7E14;
+            position: relative;
+            text-align: center;
+            margin: 0 auto;
+            width: 100px;
+            height: 100px;
+            left: 50%;
+          }
+
+          .dark {
+            color: #86A4A0;
+          }
+
+          .medium {
+            color: #FD7E14;
+          }
+
+          .light {
+            color: #FDA01C;
+          }
+
+          @keyframes grow {
+            0% { transform: scale(1.25);}
+            40% { transform: scale(2.5); }
+            70% { transform: scale(1.25); }
+            100% { transform: scale(1); }
+          }
+        </style>
+    </head>
+    <body>
+        <!-- Test 3 -->
+        <div id="heartbeat" class="test">
+            <div class="beat">
+                <div id="hearts" class="hearts">
+                    <i class="fas fa-heart small"></i>
+                    <i class="fas fa-heart medium"></i>
+                    <i class="fas fa-heart large"></i>
+                </div>
+            </div>
+            <div id="beat" class="number"></div>
+            <div class="bpm">BPM</div>
+            <div class="epoch"></div>
+        </div>
+
+        <script>
+        $(function() {
+            var data = [{ label: 'A', values: [] }],
+                length = 10,
+                nextIndex = length,
+                playing = false,
+                interval = null;
+
+            var chart = $('#heartbeat .epoch').epoch({
+                type: 'time.line',
+                data: data,
+                axes: ['left', 'bottom'],
+                windowSize: 100
+            });
+
+            var start = 1525601023;
+            var pushPoint = function() {
+                var end = start + 5;
+                fetch(`https://crisis-monitor-2.herokuapp.com/data?personId=1&end=${+end}&start=${+start}`)
+                    .then(function(response) {
+                        response.json().then(data => {
+                            if (data.length > 0) {
+                                var y = data[0]['heart_rate']
+                                var time = nextTime();
+                                chart.push([{ time: time, y: y}]);
+                                nextIndex++;
+                                start = end;
+                                $('#beat').text(y);
+                                if (y > 80) {
+                                    $('#hearts').css({"color": '#FDA01C'});
+                                } else if (y < 60) {
+                                    $('#hearts').css({"color": '#86A4A0'});
+                                } else {
+                                    $('#hearts').css({"color": '#FD7E14'});
+                                }
+                            }
+                        });
+                    });
+            };
+
+            pushPoint();
+            interval = setInterval(pushPoint, 1000);
+        });
+        </script>
+    </body>
+</html>

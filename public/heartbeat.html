@@ -1,0 +1,79 @@
+<html>
+  <head>
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.0.12/css/all.css" integrity="sha384-G0fIWCsCzJIMAVNQPfjH08cyYaUtMwjJwqiRKxxE/rx96Uroj1BtIQ6MLJuheaO9" crossorigin="anonymous" />
+    <style type="text/css">
+      .beat {
+        text-align: center;
+        position: relative;
+        height: 200px;
+        width: 200px;
+      }
+
+      #heart-beat {
+        margin-top: 10px;
+        position: absolute;
+        color: #FD7E14;
+      }
+
+      .small {
+        font-size: 64px;
+        margin-left: 32px;
+        margin-top: 32px;
+        opacity: 0.7;
+        animation: grow 2s infinite ease;
+      }
+
+      .medium {
+        font-size: 96px;
+        margin-left: 16px;
+        margin-top: 16px;
+        opacity: 0.2;
+        animation-delay: 0.5s;
+        animation: grow 2s infinite ease;
+      }
+
+      .large {
+        font-size: 128px;
+        opacity: 0.1;
+        animation-delay: 0.2s;
+        animation: grow 2s infinite ease;
+      }
+
+      .hearts i {
+        position: absolute;
+        top: 50%;
+        display: inline-block;
+      }
+
+      .hearts {
+        color: #FD7E14;
+        position: relative;
+        text-align: center;
+        margin: 0 auto;
+        width: 100px;
+        height: 100px;
+        left: 50%;
+      }
+
+      @keyframes grow {
+        0% { transform: scale(1.25);}
+        40% { transform: scale(2.5); }
+        70% { transform: scale(1.25); }
+        100% { transform: scale(1); }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="beat">
+      <div class="hearts">
+        <i class="fas fa-heart small"></i>
+        <i class="fas fa-heart medium"></i>
+        <i class="fas fa-heart large"></i>
+      </div>
+      <div id="heart-beat">heart beat</div>
+    </div>
+    <script type="text/javascript">
+//      fetch()
+    </script>
+  </body>
+</html>

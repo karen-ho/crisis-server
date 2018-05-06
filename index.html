@@ -1,0 +1,84 @@
+<head>
+	<script
+  src="https://code.jquery.com/jquery-2.2.4.min.js"
+  integrity="sha256-BbhdlvQf/xTY9gja0Dq3HiwQF8LaCRTXxZKRutelT44="
+  crossorigin="anonymous"></script>
+
+	<style>
+
+		#sms, #call, #fitbit, #demo-off, #demo-on {
+			width: 100%;
+			height: 20%;
+			border: 1px solid black;
+			margin-bottom: 10px;
+			font-size: 50px;
+		}
+	</style>
+	
+</head>
+
+<html>
+	<button id="sms">
+		Send SMS
+	</button>
+
+	<button id="call">
+		Call 
+	</button>
+
+	<button id="fitbit">
+		Trigger Fitbit
+	</button>
+
+	<button id="demo-on">
+		demo mode on
+	</button>
+
+	<button id="demo-off">
+		demo mode off
+	</button>
+
+	<script>
+		$(document).ready(function() {
+			$('#sms').click(function() {
+				$.ajax({
+					type: 'GET',
+					dataType: 'jsonp',
+					crossDomain: true,
+					jsonpCallback: 'callback',
+					url: 'http://crisis-monitor-2.herokuapp.com/twilio/sms'
+				});
+			});
+
+			$('#call').click(function() {
+				$.ajax({
+					type: 'GET',
+					dataType: 'jsonp',
+					crossDomain: true,
+					jsonpCallback: 'callback',
+					url: 'http://crisis-monitor-2.herokuapp.com/twilio/call'
+				});
+			});
+
+			$('#demo-on').click(function() {
+				fetch(new Request('/demo', {
+					method: 'PUT',
+					body: JSON.stringify({ value: true }),
+					headers: new Headers({
+						'content-type': 'application/json'
+					})
+				}));
+			});
+
+			$('#demo-off').click(function() {
+				fetch(new Request('/demo', {
+					method: 'PUT',
+					body: JSON.stringify({ value: false }),
+					headers: new Headers({
+						'content-type': 'application/json'
+					})
+				}));
+			});
+		});
+	</script>
+</html>
